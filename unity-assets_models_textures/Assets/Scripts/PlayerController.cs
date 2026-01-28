@@ -2,42 +2,68 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float moveSpeed = 6f;      // Movement speed
+    public float jumpForce = 5f;      // Upward velocity for jump
+    public float gravity = -9.81f;    // Gravity force
+    public LayerMask groundMask;      // Layer that counts as ground
+    public float groundCheckDistance = 0.1f; // How far to check for ground
 
-    public float moveSpeed = 6f;
-    public float jumpForce = 5f;
-    public float groundCheckDistance = 0.2f;
+    private Vector3 velocity;         // Vertical velocity
+    private bool isGrounded;          // Ground check
+    private Transform playerTransform;
 
-    private Rigidbody rb;
-    private bool isGrounded;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        playerTransform = transform;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Jump input
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        // Check if the player is grounded
+        GroundCheck();
+
+        // Get input
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        // Move player
+        MovePlayer(direction);
+
+        // Jump
+        HandleJump();
+    }
+
+    private void MovePlayer(Vector3 direction)
+    {
+        // Horizontal movement
+        playerTransform.Translate(direction * moveSpeed * Time.deltaTime, Space.World);
+
+        // Vertical movement
+        playerTransform.Translate(velocity * Time.deltaTime, Space.World);
+    }
+
+    private void HandleJump()
+    {
+        // Jump anytime Space is pressed
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            velocity.y = jumpForce;
+        }
+
+        // Apply gravity
+        velocity.y += gravity * Time.deltaTime;
+
+        // Optional: clamp player to ground
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = 0;
         }
     }
 
-    void FixedUpdate()
+    private void GroundCheck()
     {
-        // Movement input (WASD + diagonals)
-        float horizontal = Input.GetAxis("Horizontal"); // A / D
-        float vertical = Input.GetAxis("Vertical");     // W / S
-
-        Vector3 moveDirection = new Vector3(horizontal, 0f, vertical).normalized;
-        Vector3 moveVelocity = moveDirection * moveSpeed;
-
-        rb.linearVelocity = new Vector3(moveVelocity.x, rb.linearVelocity.y, moveVelocity.z);
-
-        // Ground check
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance + 0.5f);
+        // Raycast down to check ground
+        isGrounded = Physics.Raycast(playerTransform.position, Vector3.down, groundCheckDistance, groundMask);
     }
 }
