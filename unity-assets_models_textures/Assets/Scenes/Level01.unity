@@ -1532,7 +1532,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3924104534452077089, guid: b1bc8120923fab74b87f718d38698721, type: 3}
       propertyPath: m_Name
-      value: TimeCanvas
+      value: TimerCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 4784223284549444054, guid: b1bc8120923fab74b87f718d38698721, type: 3}
       propertyPath: m_Pivot.x
