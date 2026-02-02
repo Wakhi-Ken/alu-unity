@@ -5194,7 +5194,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d005a4c03f296a440aeb6b8ad3b12504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WinTrigger
-  timerText: {fileID: 177491478}
+  winFontSize: 60
+  winColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &1772438708
 GameObject:
   m_ObjectHideFlags: 0

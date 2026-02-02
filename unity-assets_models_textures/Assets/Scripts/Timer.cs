@@ -1,26 +1,27 @@
 using UnityEngine;
-using UnityEngine.UI; // Include this for UI components
+using UnityEngine.UI;
 using System.Collections;
 
 public class Timer : MonoBehaviour
 {
     public Text timerText; // Reference to the UI Text component
-    private float elapsedTime = 0f; // Track elapsed time
+    private float elapsedTime = 0f;
+    private bool isRunning = true; // NEW: flag to stop the timer
+    private Coroutine timerCoroutine;
 
     void Start()
     {
-        // Initialize the timer text
         timerText.text = FormatTime(elapsedTime);
-        StartCoroutine(UpdateTimer());
+        timerCoroutine = StartCoroutine(UpdateTimer());
     }
 
     private IEnumerator UpdateTimer()
     {
-        while (true) // Infinite loop until the object is destroyed
+        while (isRunning) // <- Use the flag instead of "while(true)"
         {
-            yield return new WaitForSeconds(0.1f); // Update every 0.1 seconds
-            elapsedTime += 0.1f; // Increase the elapsed time by 0.1 seconds
-            timerText.text = FormatTime(elapsedTime); // Update timer text
+            yield return new WaitForSeconds(0.1f);
+            elapsedTime += 0.1f;
+            timerText.text = FormatTime(elapsedTime);
         }
     }
 
@@ -28,6 +29,16 @@ public class Timer : MonoBehaviour
     {
         int minutes = Mathf.FloorToInt(time / 60);
         float seconds = time % 60;
-        return string.Format("{0:00}:{1:00.00}", minutes, seconds); // Format to "MM:SS.SS"
+        return string.Format("{0:00}:{1:00.00}", minutes, seconds);
+    }
+
+    // Call this method to stop the timer
+    public void StopTimer()
+    {
+        isRunning = false;
+        if (timerCoroutine != null)
+        {
+            StopCoroutine(timerCoroutine);
+        }
     }
 }
