@@ -4048,6 +4048,7 @@ MonoBehaviour:
   groundCheckDistance: 0.1
   startPosition: {x: 0, y: 0, z: 0}
   fallThreshold: -10
+  respawnHeight: 15
 --- !u!4 &1337779456 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3809677093915261934, guid: c6f5a271912ec0b4e8b48de7c11aabb8, type: 3}
@@ -5175,8 +5176,8 @@ Transform:
   m_GameObject: {fileID: 1678849251}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 1.25, z: 59.4}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.01, y: 2.028, z: 57.95}
+  m_LocalScale: {x: 1, y: 1.6845474, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 startPosition;
     public float fallThreshold = -10f;
+    public float respawnHeight = 15f; // how high above start the player falls from
 
     private Vector3 velocity;
     private bool isGrounded;
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // Check if player fell off the level
         if (transform.position.y < fallThreshold)
         {
             Respawn();
@@ -34,12 +36,10 @@ public class PlayerController : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         Vector3 move = new Vector3(horizontal, 0f, vertical);
 
-        // Move player (collisions handled automatically)
         controller.Move(move * moveSpeed * Time.deltaTime);
 
         HandleJump();
 
-        // Apply gravity
         controller.Move(velocity * Time.deltaTime);
     }
 
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f; // keeps player grounded
+            velocity.y = -2f;
         }
 
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
@@ -65,7 +65,12 @@ public class PlayerController : MonoBehaviour
 
     private void Respawn()
     {
-        transform.position = startPosition + Vector3.up * 10f;
+        // Spawn above the start position
+        Vector3 respawnPosition = startPosition + Vector3.up * respawnHeight;
+        controller.enabled = false;          // avoid CharacterController glitch
+        transform.position = respawnPosition;
+        controller.enabled = true;
+
         velocity = Vector3.zero;
     }
 }
