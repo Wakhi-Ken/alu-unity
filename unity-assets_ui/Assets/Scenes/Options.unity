@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 70770723}
   - component: {fileID: 70770722}
   m_Layer: 5
-  m_Name: InvertyToggleText
+  m_Name: InvertYToggleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -964,7 +964,7 @@ GameObject:
   - component: {fileID: 838851714}
   - component: {fileID: 838851715}
   m_Layer: 5
-  m_Name: InvertyToggle
+  m_Name: InvertYToggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
