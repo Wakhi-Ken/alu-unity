@@ -18,4 +18,10 @@ public class MainMenu : MonoBehaviour
         Debug.Log("Exited");
         Application.Quit();
     }
+
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
 }
