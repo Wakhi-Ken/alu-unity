@@ -3,25 +3,33 @@ using UnityEngine.UI;
 
 public class WinTrigger : MonoBehaviour
 {
-    public int winFontSize = 60;       // Font size after winning
-    public Color winColor = Color.green; // Text color after winning
+    public GameObject winCanvas;   // NEW
 
-    private Timer timer;       // Reference to the Timer script
-    private Text timerText;    // Reference to the timer's Text
+    public int winFontSize = 60;
+    public Color winColor = Color.green;
+
+    private Timer timer;
+    private Text timerText;
     private bool hasWon = false;
 
     void Start()
     {
-        // Find the player by tag
         GameObject player = GameObject.FindWithTag("Player");
+
         if (player != null)
         {
-            // Get the Timer script attached to the player
             timer = player.GetComponent<Timer>();
+
             if (timer != null)
             {
-                timerText = timer.timerText; // Get the Text component from Timer
+                timerText = timer.timerText;
             }
+        }
+
+        // Make sure win screen is hidden at start
+        if (winCanvas != null)
+        {
+            winCanvas.SetActive(false);
         }
     }
 
@@ -29,7 +37,6 @@ public class WinTrigger : MonoBehaviour
     {
         if (hasWon) return;
 
-        // Check if the Player touched the WinFlag
         if (other.CompareTag("Player"))
         {
             hasWon = true;
@@ -39,17 +46,14 @@ public class WinTrigger : MonoBehaviour
 
     private void Win()
     {
-        // Stop the timer
         if (timer != null)
         {
-            timer.StopTimer();
+            timer.Win(); // NEW: send final time
         }
 
-        // Change timer appearance
-        if (timerText != null)
+        if (winCanvas != null)
         {
-            timerText.fontSize = winFontSize;
-            timerText.color = winColor;
+            winCanvas.SetActive(true);
         }
 
         Debug.Log("Player Wins!");

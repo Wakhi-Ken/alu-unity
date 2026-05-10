@@ -41,4 +41,27 @@ public class Timer : MonoBehaviour
             StopCoroutine(timerCoroutine);
         }
     }
+
+    public void Win()
+    {
+        StopTimer();
+
+        // Find WinCanvas FinalTime text
+        GameObject winCanvas = GameObject.Find("WinCanvas");
+
+        if (winCanvas != null)
+        {
+            Transform finalTimeObj = winCanvas.transform.Find("FinalTime");
+
+            if (finalTimeObj != null)
+            {
+                UnityEngine.UI.Text finalText = finalTimeObj.GetComponent<UnityEngine.UI.Text>();
+
+                if (finalText != null)
+                {
+                    finalText.text = "Final Time: " + timerText.text;
+                }
+            }
+        }
+    }
 }
