@@ -7,8 +7,6 @@ public class CameraController : MonoBehaviour
     public float height = 2f;
     public float mouseSensitivity = 2f;
 
-    public bool isInverted = false;
-
     private float currentAngleY = 0f;
     private float currentAngleX = 0f;
 
@@ -32,7 +30,7 @@ public class CameraController : MonoBehaviour
 
         currentAngleY += mouseX;
 
-        if (isInverted)
+        if (SettingsData.invertY)
         {
             currentAngleX += mouseY;
         }

@@ -53,7 +53,7 @@ public class PauseMenu : MonoBehaviour
     // GO TO OPTIONS MENU
     public void Options()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("Options");
+        PlayerPrefs.SetString("PreviousScene", UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Options");
     }
 }

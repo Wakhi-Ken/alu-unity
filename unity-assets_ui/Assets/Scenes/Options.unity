@@ -816,6 +816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f82ee79a0cc12468bc9ebee32f4dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OptionsMenu
+  invertYToggle: {fileID: 838851715}
 --- !u!1 &653049420
 GameObject:
   m_ObjectHideFlags: 0
@@ -2777,6 +2778,34 @@ PrefabInstance:
     - target: {fileID: 1338588283303143701, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963131531002989326, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963131531002989326, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963131531002989326, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 528492665}
+    - target: {fileID: 6963131531002989326, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963131531002989326, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Apply
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963131531002989326, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: OptionsMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6963131531002989326, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8110632619589511942, guid: e449a79f6ffa91d48a0eab5d45fb15d1, type: 3}
       propertyPath: m_Name
