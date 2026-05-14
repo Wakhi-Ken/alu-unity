@@ -4,71 +4,91 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 6f;
     public float jumpForce = 5f;
-    public float gravity = -9.81f;
-    public LayerMask groundMask;
-    public float groundCheckDistance = 0.2f;
+    public float gravity = -20f;
 
-    public Vector3 startPosition;
+    public LayerMask groundMask;
+
     public float fallThreshold = -10f;
-    public float respawnHeight = 15f; // how high above start the player falls from
+    public float respawnHeight = 15f;
 
     private Vector3 velocity;
     private bool isGrounded;
+
     private CharacterController controller;
+
+    public Vector3 startPosition;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
+
         startPosition = transform.position;
     }
 
     void Update()
     {
-        // Check if player fell off the level
-        if (transform.position.y < fallThreshold)
-        {
-            Respawn();
-        }
-
+        // Check if grounded
         GroundCheck();
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        Vector3 move = new Vector3(horizontal, 0f, vertical);
-
-        controller.Move(move * moveSpeed * Time.deltaTime);
-
-        HandleJump();
-
-        controller.Move(velocity * Time.deltaTime);
-    }
-
-    private void HandleJump()
-    {
+        // Keep player grounded
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
 
+        // Movement
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 move = transform.right * horizontal +
+                       transform.forward * vertical;
+
+        controller.Move(move * moveSpeed * Time.deltaTime);
+
+        // Jump
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
             velocity.y = jumpForce;
         }
 
+        // Gravity
         velocity.y += gravity * Time.deltaTime;
+
+        controller.Move(velocity * Time.deltaTime);
+
+        // Respawn if fallen
+        if (transform.position.y < fallThreshold)
+        {
+            Respawn();
+        }
     }
 
     private void GroundCheck()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundMask);
+        // Ray starts slightly above feet
+        Vector3 rayStart = transform.position + Vector3.up * 0.1f;
+
+        // Longer ray for your controller size
+        float rayLength = 1.2f;
+
+        isGrounded = Physics.Raycast(
+            rayStart,
+            Vector3.down,
+            rayLength,
+            groundMask
+        );
+
+        Debug.DrawRay(rayStart, Vector3.down * rayLength, Color.red);
     }
 
     private void Respawn()
     {
-        // Spawn above the start position
         Vector3 respawnPosition = startPosition + Vector3.up * respawnHeight;
-        controller.enabled = false;          // avoid CharacterController glitch
+
+        controller.enabled = false;
+
         transform.position = respawnPosition;
+
         controller.enabled = true;
 
         velocity = Vector3.zero;
