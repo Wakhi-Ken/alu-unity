@@ -1,96 +1,98 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 6f;
-    public float jumpForce = 5f;
-    public float gravity = -20f;
-
-    public LayerMask groundMask;
-
-    public float fallThreshold = -10f;
-    public float respawnHeight = 15f;
-
-    private Vector3 velocity;
-    private bool isGrounded;
-
-    private CharacterController controller;
-
+    public GameObject player;
+    public float speed = 5f;
+    public float horizontalInput;
+    public float verticalInput;
+    public float jumpForce = 7f;
+    public bool isGrounded;
+    private Rigidbody rb;
     public Vector3 startPosition;
-
+    public float minHeight = -10f;
+    public float rotationSpeed = 10f;
+    private Animator animator;
+    private void Awake()
+    {
+        animator = GetComponentInChildren<Animator>();
+    }
     void Start()
     {
-        controller = GetComponent<CharacterController>();
-
+        rb = GetComponent<Rigidbody>();
         startPosition = transform.position;
     }
 
+    // Update is called once per frame
     void Update()
     {
-        // Check if grounded
-        GroundCheck();
+        MovePlayer();
+        isFalling();
+    }
 
-        // Keep player grounded
-        if (isGrounded && velocity.y < 0)
+    void MovePlayer()
+    {
+        horizontalInput = Input.GetAxis("Horizontal") * Time.deltaTime * speed;
+        verticalInput = Input.GetAxis("Vertical") * Time.deltaTime * speed;
+        Vector3 movement = new Vector3(horizontalInput, 0, verticalInput);
+        if (movement != Vector3.zero && isGrounded && !animator.GetBool("Jump"))
         {
-            velocity.y = -2f;
+            Quaternion target = Quaternion.LookRotation(movement);
+            transform.rotation = Quaternion.Slerp(transform.rotation, target, rotationSpeed * Time.deltaTime);
+            animator.SetBool("Run", true);
+        } else
+        {
+            animator.SetBool("Run", false);
         }
 
-        // Movement
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        transform.Translate(verticalInput, 0, -horizontalInput, Space.World);
 
-        Vector3 move = transform.right * horizontal +
-                       transform.forward * vertical;
-
-        controller.Move(move * moveSpeed * Time.deltaTime);
-
-        // Jump
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
-            velocity.y = jumpForce;
+            Jump(); 
         }
+    }
 
-        // Gravity
-        velocity.y += gravity * Time.deltaTime;
+    void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        animator.SetBool("Jump", true);
+    }
 
-        controller.Move(velocity * Time.deltaTime);
-
-        // Respawn if fallen
-        if (transform.position.y < fallThreshold)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            Respawn();
+            isGrounded = true;
+            animator.SetBool("Jump", false);
+            animator.SetBool("isFalling", false);
+            animator.SetBool("touchGround", true);
+            //animator.Play("Happy Idle");
         }
     }
 
-    private void GroundCheck()
+    private void OnCollisionExit(Collision collision)
     {
-        // Ray starts slightly above feet
-        Vector3 rayStart = transform.position + Vector3.up * 0.1f;
-
-        // Longer ray for your controller size
-        float rayLength = 1.2f;
-
-        isGrounded = Physics.Raycast(
-            rayStart,
-            Vector3.down,
-            rayLength,
-            groundMask
-        );
-
-        Debug.DrawRay(rayStart, Vector3.down * rayLength, Color.red);
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+            if (rb.linearVelocity.y < 0)
+            {
+                animator.SetBool("isFalling", true);
+                animator.SetBool("touchGround", false);
+            }
+        }
     }
 
-    private void Respawn()
+    private void isFalling()
     {
-        Vector3 respawnPosition = startPosition + Vector3.up * respawnHeight;
-
-        controller.enabled = false;
-
-        transform.position = respawnPosition;
-
-        controller.enabled = true;
-
-        velocity = Vector3.zero;
+        if (transform.position.y < minHeight)
+        {
+            animator.SetBool("isFalling", true);
+            transform.position = startPosition + new Vector3(0, 10f, 0);
+            rb.linearVelocity = Vector3.zero;
+        }
     }
 }

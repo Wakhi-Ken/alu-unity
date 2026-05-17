@@ -1,41 +1,34 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class OptionsMenu : MonoBehaviour
 {
-    public Toggle invertYToggle;
-
+    public Toggle invertY;
     private string previousScene;
+    private bool invert;
 
-    void Start()
+    private void Start()
     {
-        // store where player came from
-        previousScene = PlayerPrefs.GetString("PreviousScene");
-
-        // load saved setting into UI
-        invertYToggle.isOn = SettingsData.invertY;
-    }
-
-    public void Apply()
-    {
-        // save setting
-        SettingsData.invertY = invertYToggle.isOn;
-
-        // return to previous scene
-        SceneManager.LoadScene(previousScene);
+        previousScene = PlayerPrefs.GetString("Previous", "MainMenu");
+        invertY.isOn = PlayerPrefs.GetInt("InvertY", 0) == 1;
     }
 
     public void Back()
     {
-        string sceneToLoad = previousScene;
-
-        // Safety fallback
-        if (string.IsNullOrEmpty(sceneToLoad))
-        {
-            sceneToLoad = "MainMenu";
-        }
-
-        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneToLoad);
+        SceneManager.LoadScene(previousScene);
     }
+
+    public void Apply()
+    {
+        invert = invertY.isOn;
+        PlayerPrefs.SetInt("InvertY", invert ? 1 : 0);
+        SceneManager.LoadScene(previousScene);
+    }
+
+
+
+
 }
